@@ -1,0 +1,419 @@
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Bot, Send, Navigation, MapPin, Star, Terminal, ShieldAlert, Cpu, Check, Compass, Eye, ShieldCheck } from "lucide-react";
+
+interface VisualProps {
+  isHovered: boolean;
+}
+
+/* ----------------------------- 1. CAMPUSONE ----------------------------- */
+
+export function CampusOneVisual({ isHovered }: VisualProps) {
+  const [messages, setMessages] = useState([
+    { role: "user", text: "Where is the Seminar Hall?" },
+    { role: "bot", text: "Building B, 2nd Floor. I've sent the directions to your map." }
+  ]);
+
+  useEffect(() => {
+    if (isHovered) {
+      const timeout = setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          { role: "user", text: "Thanks, is it open today?" },
+          { role: "bot", text: "Yes, open until 8:00 PM." }
+        ]);
+      }, 800);
+      return () => clearTimeout(timeout);
+    } else {
+      setMessages([
+        { role: "user", text: "Where is the Seminar Hall?" },
+        { role: "bot", text: "Building B, 2nd Floor. I've sent the directions to your map." }
+      ]);
+    }
+  }, [isHovered]);
+
+  return (
+    <div className="relative w-full h-[220px] bg-black/20 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-4">
+      {/* Widget Header */}
+      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+        <div className="flex items-center gap-2">
+          <div className="h-6 w-6 rounded-full bg-cyan/10 flex items-center justify-center border border-cyan/20">
+            <Bot className="h-3.5 w-3.5 text-cyan" />
+          </div>
+          <span className="text-xs font-mono font-medium tracking-tight text-foreground/80">CampusOne AI</span>
+        </div>
+        <div className="h-2 w-2 rounded-full bg-emerald-500 animate-hud-pulse" />
+      </div>
+
+      {/* Messages area */}
+      <div className="flex-1 overflow-y-auto py-3 space-y-2.5 flex flex-col justify-end text-[11px] leading-relaxed">
+        <AnimatePresence>
+          {messages.map((m, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className={`flex max-w-[85%] rounded-lg p-2 ${
+                m.role === "user"
+                  ? "bg-white/5 border border-white/5 self-end text-right text-foreground/90 rounded-br-none"
+                  : "bg-cyan/10 border border-cyan/10 text-cyan self-start text-left rounded-bl-none"
+              }`}
+            >
+              {m.text}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {/* Input bar */}
+      <div className="mt-2 flex items-center gap-1.5 bg-white/[0.03] border border-white/5 rounded-full px-3 py-1.5">
+        <div className="text-[10px] text-muted-foreground flex-1 font-sans">
+          {isHovered ? "AI is responding..." : "Ask CampusOne assistant..."}
+        </div>
+        <Send className="h-3 w-3 text-muted-foreground" />
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------- 2. DRONE FLOOD ----------------------------- */
+
+export function DroneFloodVisual({ isHovered }: VisualProps) {
+  // A* grid navigation simulation
+  const [dronePos, setDronePos] = useState({ x: 0, y: 0 });
+  const [step, setStep] = useState(0);
+
+  const path = [
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
+    { x: 2, y: 1 },
+    { x: 3, y: 2 },
+    { x: 4, y: 2 },
+    { x: 4, y: 3 },
+    { x: 4, y: 4 }
+  ];
+
+  const obstacles = [
+    { x: 2, y: 0 },
+    { x: 1, y: 2 },
+    { x: 3, y: 1 },
+    { x: 2, y: 3 }
+  ];
+
+  useEffect(() => {
+    const intervalTime = isHovered ? 400 : 850;
+    const interval = setInterval(() => {
+      setStep(prev => {
+        const next = (prev + 1) % path.length;
+        setDronePos(path[next]);
+        return next;
+      });
+    }, intervalTime);
+    return () => clearInterval(interval);
+  }, [isHovered]);
+
+  return (
+    <div className="relative w-full h-[220px] bg-black/20 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-4">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+        <div className="flex items-center gap-2">
+          <Navigation className="h-3.5 w-3.5 text-cyan animate-pulse" />
+          <span className="text-xs font-mono font-medium tracking-tight text-foreground/80">A* Path Navigation</span>
+        </div>
+        <span className="text-[10px] font-mono text-cyan/70">Telemetry Active</span>
+      </div>
+
+      {/* Visual Grid */}
+      <div className="flex-1 flex items-center justify-center p-2">
+        <div className="grid grid-cols-5 gap-2 relative">
+          {Array.from({ length: 5 }).map((_, r) => (
+            <div key={r} className="flex gap-2">
+              {Array.from({ length: 5 }).map((_, c) => {
+                const isObstacle = obstacles.some(o => o.x === c && o.y === r);
+                const isStart = r === 0 && c === 0;
+                const isEnd = r === 4 && c === 4;
+                const isPath = path.some(p => p.x === c && p.y === r);
+                const isDrone = dronePos.x === c && dronePos.y === r;
+
+                return (
+                  <div
+                    key={c}
+                    className={`h-6 w-6 rounded-md flex items-center justify-center relative border transition-all duration-300 ${
+                      isDrone
+                        ? "bg-cyan border-cyan/40 shadow-[0_0_12px_rgba(34,211,238,0.5)] z-20"
+                        : isObstacle
+                        ? "bg-blue-950/60 border-blue-900/30 text-blue-500/80"
+                        : isEnd
+                        ? "bg-rose-500/10 border-rose-500/30"
+                        : isStart
+                        ? "bg-emerald-500/10 border-emerald-500/30"
+                        : isPath
+                        ? "bg-cyan/5 border-cyan/15"
+                        : "bg-white/[0.01] border-white/5"
+                    }`}
+                  >
+                    {isDrone && (
+                      <motion.div
+                        layoutId="drone-active"
+                        className="h-2.5 w-2.5 bg-black rounded-full flex items-center justify-center"
+                      >
+                        <span className="block h-1.5 w-1.5 rounded-full bg-cyan" />
+                      </motion.div>
+                    )}
+                    {isEnd && !isDrone && <div className="h-1.5 w-1.5 rounded-full bg-rose-500" />}
+                    {isObstacle && <span className="text-[8px] font-mono select-none">H₂O</span>}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Info status */}
+      <div className="flex items-center justify-between text-[9px] font-mono text-muted-foreground border-t border-white/5 pt-2">
+        <div>COORDS: X={dronePos.x}, Y={dronePos.y}</div>
+        <div className="text-cyan">STATUS: NAVIGATION_ON</div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------- 3. PG CONNECT ----------------------------- */
+
+export function PGConnectVisual({ isHovered }: VisualProps) {
+  return (
+    <div className="relative w-full h-[220px] bg-black/20 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-4">
+      {/* Card UI */}
+      <div className="flex-1 flex flex-col justify-center gap-3">
+        {/* Search bar simulation */}
+        <div className="flex items-center gap-2 bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5 text-[10px] text-muted-foreground font-mono">
+          <MapPin className="h-3.5 w-3.5 text-cyan" />
+          <motion.span
+            animate={{ opacity: [1, 0.5, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            Pune, Near MIT ADT...
+          </motion.span>
+        </div>
+
+        {/* Dynamic Card listing */}
+        <motion.div
+          animate={{
+            y: isHovered ? -3 : 0,
+            scale: isHovered ? 1.01 : 1,
+          }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="rounded-xl glass border border-white/5 p-3 flex gap-3 relative"
+        >
+          {/* Mini map or visual proxy */}
+          <div className="h-14 w-14 rounded-lg bg-white/[0.02] border border-white/5 overflow-hidden flex items-center justify-center relative">
+            <Compass className="h-6 w-6 text-muted-foreground/30 animate-spin" style={{ animationDuration: isHovered ? "10s" : "30s" }} />
+            <span className="absolute bottom-1 right-1 h-1.5 w-1.5 bg-cyan rounded-full animate-ping" />
+          </div>
+
+          {/* Details */}
+          <div className="flex-1 min-w-0 text-[10px] space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="font-display font-semibold text-foreground/80 tracking-tight">Skyline Heights</span>
+              <span className="flex items-center gap-0.5 text-cyan">
+                <Star className="h-2.5 w-2.5 fill-cyan text-cyan" /> 4.8
+              </span>
+            </div>
+            <p className="text-muted-foreground text-[9px] truncate">Single sharing, food, Wi-Fi included</p>
+            <div className="flex items-center justify-between pt-1">
+              <span className="font-mono text-foreground font-medium">₹8,500/mo</span>
+              <span className="text-[8px] bg-cyan/10 border border-cyan/20 text-cyan rounded-md px-1.5 py-0.5 font-mono">Verified</span>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------- 4. MICROSERVICES COLLAB ----------------------------- */
+
+export function MicroservicesVisual({ isHovered }: VisualProps) {
+  const [logs, setLogs] = useState<string[]>([
+    "docker-compose.yml parsed successfully.",
+    "Container db-mongo starting...",
+    "Container auth-node starting...",
+    "Container db-mongo ready. [OK]",
+    "Container auth-node ready. [OK]"
+  ]);
+
+  const allLogs = [
+    "docker-compose.yml parsed successfully.",
+    "Container db-mongo starting...",
+    "Container auth-node starting...",
+    "Container db-mongo ready. [OK]",
+    "Container auth-node ready. [OK]",
+    "Container gateway starting...",
+    "Container gateway ready. [OK]",
+    "Inter-service RPC channels initialized.",
+    "Gateway proxying on port 8080. [READY]",
+    "Running integration health-checks...",
+    "All containers verified. STATUS: UP."
+  ];
+
+  useEffect(() => {
+    if (isHovered) {
+      let currentIdx = 5;
+      const interval = setInterval(() => {
+        if (currentIdx < allLogs.length) {
+          setLogs(prev => [...prev.slice(1), allLogs[currentIdx]]);
+          currentIdx++;
+        } else {
+          setLogs([
+            "Container db-mongo ready. [OK]",
+            "Container auth-node ready. [OK]",
+            "Gateway proxying on port 8080. [READY]",
+            "Running integration health-checks...",
+            "All containers verified. STATUS: UP."
+          ]);
+          currentIdx = 5;
+        }
+      }, 550);
+      return () => clearInterval(interval);
+    } else {
+      setLogs([
+        "docker-compose.yml parsed successfully.",
+        "Container db-mongo starting...",
+        "Container auth-node starting...",
+        "Container db-mongo ready. [OK]",
+        "Container auth-node ready. [OK]"
+      ]);
+    }
+  }, [isHovered]);
+
+  return (
+    <div className="relative w-full h-[220px] bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-4 font-mono text-[9px] text-muted-foreground leading-relaxed">
+      {/* Terminal Header */}
+      <div className="flex items-center justify-between border-b border-white/5 pb-2 text-[10px] text-foreground/80">
+        <div className="flex items-center gap-1.5">
+          <Terminal className="h-3.5 w-3.5 text-cyan" />
+          <span>microservices-gateway</span>
+        </div>
+        <div className="flex gap-1">
+          <span className="h-2 w-2 rounded-full bg-white/10" />
+          <span className="h-2 w-2 rounded-full bg-white/10" />
+          <span className="h-2 w-2 rounded-full bg-white/10" />
+        </div>
+      </div>
+
+      {/* Terminal log streams */}
+      <div className="flex-1 py-3 space-y-1.5 flex flex-col justify-end">
+        {logs.map((l, idx) => (
+          <div key={idx} className="flex gap-2 items-start">
+            <span className="text-cyan font-bold select-none">&gt;</span>
+            <span className={l.includes("[OK]") || l.includes("STATUS: UP") ? "text-emerald-400" : "text-muted-foreground"}>
+              {l}
+            </span>
+          </div>
+        ))}
+        <div className="flex gap-1 items-center">
+          <span className="text-cyan font-bold select-none">&gt;</span>
+          <span className="h-3 w-1.5 bg-cyan animate-pulse" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------- 5. DRONE REFORESTATION ----------------------------- */
+
+export function ReforestationVisual({ isHovered }: VisualProps) {
+  const [radarAngle, setRadarAngle] = useState(0);
+  const [points, setPoints] = useState<{ x: number; y: number; active: boolean }[]>([]);
+
+  useEffect(() => {
+    // Generate static points to target
+    const generated = [
+      { x: 25, y: 35, active: false },
+      { x: 45, y: 70, active: false },
+      { x: 70, y: 30, active: false },
+      { x: 55, y: 25, active: false },
+      { x: 30, y: 65, active: false }
+    ];
+    setPoints(generated);
+  }, []);
+
+  useEffect(() => {
+    const sweepSpeed = isHovered ? 4 : 1.5;
+    const interval = setInterval(() => {
+      setRadarAngle(prev => {
+        const next = (prev + sweepSpeed) % 360;
+        // Check if any point is hit by radar angle sweep
+        setPoints(pList =>
+          pList.map(p => {
+            const dx = p.x - 50;
+            const dy = p.y - 50;
+            let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+            if (angle < 0) angle += 360;
+            const diff = Math.abs(angle - next);
+            if (diff < 15 || diff > 345) {
+              return { ...p, active: true };
+            }
+            return p;
+          })
+        );
+        return next;
+      });
+    }, 30);
+    return () => clearInterval(interval);
+  }, [isHovered]);
+
+  return (
+    <div className="relative w-full h-[220px] bg-black/20 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-4">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+        <div className="flex items-center gap-2">
+          <Cpu className="h-3.5 w-3.5 text-cyan animate-pulse" />
+          <span className="text-xs font-mono font-medium tracking-tight text-foreground/80">Terrain Reforestation Scan</span>
+        </div>
+        <span className="text-[10px] font-mono text-cyan">GPS Active</span>
+      </div>
+
+      {/* Radar Sweep screen */}
+      <div className="flex-1 flex items-center justify-center p-2 relative">
+        <div className="h-28 w-28 rounded-full border border-cyan/15 relative overflow-hidden flex items-center justify-center bg-cyan/[0.003]">
+          {/* Radar grids */}
+          <div className="absolute inset-2 rounded-full border border-cyan/10" />
+          <div className="absolute inset-6 rounded-full border border-cyan/5" />
+          <div className="absolute h-full w-[1px] bg-cyan/5" />
+          <div className="absolute w-full h-[1px] bg-cyan/5" />
+
+          {/* Sweeper arm */}
+          <div
+            className="absolute top-1/2 left-1/2 w-1/2 h-[1px] bg-gradient-to-r from-cyan/80 to-transparent origin-left z-10"
+            style={{ transform: `rotate(${radarAngle - 90}deg)` }}
+          />
+
+          {/* Target points */}
+          {points.map((p, idx) => (
+            <div
+              key={idx}
+              className={`absolute h-2.5 w-2.5 rounded-full -translate-x-1/2 -translate-y-1/2 transition-all duration-300 flex items-center justify-center border ${
+                p.active
+                  ? "bg-emerald-500 border-emerald-400/50 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
+                  : "bg-cyan/10 border-cyan/30"
+              }`}
+              style={{ left: `${p.x}%`, top: `${p.y}%` }}
+            >
+              {p.active && <Check className="h-1.5 w-1.5 text-white stroke-[3px]" />}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Radar telemetry status */}
+      <div className="flex items-center justify-between text-[9px] font-mono text-muted-foreground border-t border-white/5 pt-2">
+        <div>SCAN_RADAR: {Math.round(radarAngle)}°</div>
+        <div className="text-cyan">SEEDS_PLANTED: 1,240</div>
+      </div>
+    </div>
+  );
+}
