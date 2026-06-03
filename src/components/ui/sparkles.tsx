@@ -61,7 +61,7 @@ const SparklesCoreInner = (props: ParticlesProps) => {
           id={id || generatedId}
           className={cn("h-full w-full")}
           particlesLoaded={particlesLoaded}
-          options={{
+          options={({
             background: {
               color: {
                 value: background || "#0d47a1",
@@ -428,7 +428,7 @@ const SparklesCoreInner = (props: ParticlesProps) => {
               },
             },
             detectRetina: true,
-          }}
+          } as any)}
         />
       )}
     </motion.div>

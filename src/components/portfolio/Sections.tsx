@@ -160,7 +160,7 @@ export function Hero() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.21, 1.02, 0.43, 1.01] },
+      transition: { duration: 0.8, ease: [0.21, 1.02, 0.43, 1.01] as const },
     },
   };
 
@@ -169,7 +169,7 @@ export function Hero() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.9, ease: [0.21, 1.02, 0.43, 1.01] },
+      transition: { duration: 0.9, ease: [0.21, 1.02, 0.43, 1.01] as const },
     },
   };
 
