@@ -46,7 +46,7 @@ async function main() {
   // 4. Create .vc-config.json for the serverless function
   const vcConfig = {
     runtime: 'nodejs20.x',
-    handler: 'entry.js',
+    handler: 'entry.mjs',
     launcherType: 'Nodejs',
     shouldAddHelpers: true
   };
@@ -66,13 +66,12 @@ async function main() {
     console.warn('Warning: dist/server directory not found!');
   }
 
-  // 6. Write the entry.js Node.js adapter
+  // 6. Write the entry.mjs Node.js adapter (ESM format)
   const entryContent = `
-const path = require('path');
-const serverModule = require('./dist/server/server.js');
-const serverFetch = serverModule.default?.fetch || serverModule.fetch;
+import serverModule from './dist/server/server.js';
+const serverFetch = serverModule.default?.fetch || serverModule.fetch || serverModule.default;
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   try {
     const host = req.headers.host || 'localhost';
     const protocol = req.headers['x-forwarded-proto'] || 'http';
@@ -126,7 +125,7 @@ module.exports = async (req, res) => {
     res.statusCode = 500;
     res.end('Internal Server Error');
   }
-};
+}
 
 function getRawBody(req) {
   return new Promise((resolve, reject) => {
@@ -138,8 +137,8 @@ function getRawBody(req) {
 }
 `;
 
-  fs.writeFileSync(path.resolve(funcDir, 'entry.js'), entryContent);
-  console.log('Created .vercel/output/functions/index.func/entry.js');
+  fs.writeFileSync(path.resolve(funcDir, 'entry.mjs'), entryContent);
+  console.log('Created .vercel/output/functions/index.func/entry.mjs');
   console.log('Vercel Build Output packaging completed successfully!');
 }
 
