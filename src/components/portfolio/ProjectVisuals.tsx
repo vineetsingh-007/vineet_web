@@ -578,3 +578,193 @@ export function AerisAiVisual({ isHovered }: VisualProps) {
     </div>
   );
 }
+
+/* ----------------------------- 7. SIGNVERSE AI ----------------------------- */
+
+export function SignVerseVisual({ isHovered }: VisualProps) {
+  const [detectedChar, setDetectedChar] = useState("H");
+  const [word, setWord] = useState("");
+  const [step, setStep] = useState(0);
+  const [confidence, setConfidence] = useState(99.4);
+  const [fps, setFps] = useState(30);
+
+  // Simulation sequence: Spells H-E-L-L-O
+  const sequence = [
+    { char: "H", word: "H", handState: "two_fingers" },
+    { char: "E", word: "HE", handState: "fist" },
+    { char: "L", word: "HEL", handState: "l_shape" },
+    { char: "L", word: "HELL", handState: "l_shape" },
+    { char: "O", word: "HELLO", handState: "o_shape" },
+    { char: " ", word: "HELLO 👋", handState: "open_hand" }
+  ];
+
+  useEffect(() => {
+    const intervalTime = isHovered ? 800 : 1600;
+    const interval = setInterval(() => {
+      setStep(prev => {
+        const next = (prev + 1) % sequence.length;
+        const current = sequence[next];
+        setDetectedChar(current.char);
+        setWord(current.word);
+        setConfidence(Number((95 + Math.random() * 4.9).toFixed(1)));
+        setFps(Math.floor(Math.random() * 3) + 29);
+        return next;
+      });
+    }, intervalTime);
+    return () => clearInterval(interval);
+  }, [isHovered]);
+
+  const current = sequence[step];
+
+  // Define simple coordinates for hand shapes to simulate hand landmarks
+  const getHandLandmarks = (state: string) => {
+    // Base wrist position
+    const wrist = { x: 50, y: 85 };
+    
+    // Default relative fingertip coordinates based on gesture state
+    let fingers = [
+      { x: 30, y: 60 }, // Thumb
+      { x: 40, y: 35 }, // Index
+      { x: 50, y: 30 }, // Middle
+      { x: 60, y: 35 }, // Ring
+      { x: 70, y: 45 }  // Pinky
+    ];
+
+    if (state === "fist" || state === "o_shape") {
+      fingers = [
+        { x: 42, y: 65 },
+        { x: 45, y: 58 },
+        { x: 50, y: 58 },
+        { x: 55, y: 60 },
+        { x: 58, y: 65 }
+      ];
+    } else if (state === "two_fingers") {
+      fingers = [
+        { x: 35, y: 65 },
+        { x: 45, y: 30 }, // Index up
+        { x: 55, y: 32 }, // Middle up
+        { x: 60, y: 65 },
+        { x: 65, y: 70 }
+      ];
+    } else if (state === "l_shape") {
+      fingers = [
+        { x: 25, y: 55 }, // Thumb out
+        { x: 45, y: 25 }, // Index up
+        { x: 52, y: 62 },
+        { x: 58, y: 65 },
+        { x: 64, y: 68 }
+      ];
+    }
+
+    return { wrist, fingers };
+  };
+
+  const { wrist, fingers } = getHandLandmarks(current.handState);
+
+  return (
+    <div className="relative w-full h-[220px] bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
+      {/* HUD Header */}
+      <div className="flex items-center justify-between border-b border-white/5 pb-1.5 text-[10px] text-foreground/80">
+        <div className="flex items-center gap-1.5">
+          <Eye className="h-3.5 w-3.5 text-cyan animate-pulse" />
+          <span className="font-semibold tracking-wide text-cyan">SIGNVERSE CV ENGINE</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          <span className="text-emerald-400 font-semibold">{fps} GEST/S</span>
+        </div>
+      </div>
+
+      {/* Main Layout */}
+      <div className="flex-1 flex gap-3 my-2 overflow-hidden">
+        {/* Camera Feed view (left) */}
+        <div className="flex-1 rounded bg-white/[0.01] border border-white/5 relative overflow-hidden flex flex-col justify-between p-2">
+          {/* Target Box corners overlay */}
+          <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-cyan/50" />
+          <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-cyan/50" />
+          <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-cyan/50" />
+          <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-cyan/50" />
+
+          {/* HUD status */}
+          <div className="text-[7px] text-cyan/70 z-10 flex justify-between">
+            <span>WEBCAM: OK</span>
+            <span>GESTURE: {current.handState.toUpperCase()}</span>
+          </div>
+
+          {/* SVG Hand Landmark Drawing */}
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+            <svg className="w-full h-full p-4" viewBox="0 0 100 100" preserveAspectRatio="none">
+              {/* Hand connections (skeleton lines) */}
+              {fingers.map((f, i) => (
+                <line
+                  key={i}
+                  x1={wrist.x}
+                  y1={wrist.y}
+                  x2={f.x}
+                  y2={f.y}
+                  stroke="rgba(34, 211, 238, 0.4)"
+                  strokeWidth="1.5"
+                />
+              ))}
+
+              {/* Wrist node */}
+              <circle cx={wrist.x} cy={wrist.y} r="2.5" fill="#22d3ee" />
+
+              {/* Finger Tip nodes */}
+              {fingers.map((f, i) => (
+                <circle
+                  key={i}
+                  cx={f.x}
+                  cy={f.y}
+                  r="2.5"
+                  fill={i === 1 ? "#34d399" : "#22d3ee"} // highlight index tip
+                />
+              ))}
+            </svg>
+          </div>
+
+          {/* Live Translation bubble */}
+          <div className="absolute bottom-2 left-2 right-2 bg-black/75 border border-cyan/20 rounded-md p-1 z-10 text-[9px] text-center font-sans text-foreground font-semibold flex items-center justify-center gap-1.5">
+            <span className="text-[7px] font-mono text-cyan uppercase tracking-wide">Output:</span>
+            <span className="text-cyan tracking-wider">{word || "_"}</span>
+          </div>
+        </div>
+
+        {/* Inference details (right) */}
+        <div className="w-[100px] flex flex-col gap-1.5 justify-center">
+          {/* Stat Box 1 */}
+          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
+            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Prediction</span>
+            <span className="text-[14px] font-bold text-cyan mt-0.5 text-center bg-cyan/5 border border-cyan/10 rounded py-0.5">
+              "{detectedChar === " " ? "SPACE" : detectedChar}"
+            </span>
+          </div>
+          {/* Stat Box 2 */}
+          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
+            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Confidence</span>
+            <span className="text-[11px] font-bold text-emerald-400 mt-0.5">
+              {confidence}%
+            </span>
+          </div>
+          {/* Stat Box 3 */}
+          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
+            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Models</span>
+            <span className="text-[8px] font-semibold text-foreground/80 mt-0.5 truncate">
+              MediaPipe + PyTorch
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* EOC Footer Status */}
+      <div className="flex items-center justify-between text-[8px] border-t border-white/5 pt-1.5">
+        <div className="flex items-center gap-1">
+          <ShieldCheck className="h-3 w-3 text-emerald-400" />
+          <span className="text-muted-foreground">LOCAL INFERENCE:</span>
+          <span className="text-emerald-400 font-bold">100% PRIVATE</span>
+        </div>
+        <span className="text-muted-foreground/60">DEVICE: CPU</span>
+      </div>
+    </div>
+  );
+}

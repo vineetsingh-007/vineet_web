@@ -6,14 +6,14 @@ import {
   GraduationCap, Award, FlaskConical, BriefcaseBusiness,
   Container, Compass, Leaf, Satellite as SatIcon,
   Sigma, Coffee, MonitorCog, Trophy,
-  Lightbulb, Users, Layers, Sparkles, ShieldCheck, Rocket, Radar,
+  Lightbulb, Users, Layers, Sparkles, ShieldCheck, Rocket, Radar, Eye, Hand,
 } from "lucide-react";
 import { HolographicProfile } from "./HolographicProfile";
 import {
   Magnetic, SpotlightTiltCard, ScrollReveal, ScrollRevealContainer, ScrollRevealItem
 } from "./AnimationPrimitives";
 import {
-  CampusOneVisual, DroneFloodVisual, PGConnectVisual, MicroservicesVisual, ReforestationVisual, AerisAiVisual
+  CampusOneVisual, DroneFloodVisual, PGConnectVisual, MicroservicesVisual, ReforestationVisual, AerisAiVisual, SignVerseVisual
 } from "./ProjectVisuals";
 import { SparklesCore } from "../ui/sparkles";
 
@@ -580,6 +580,21 @@ export function Skills() {
 
 const PROJECTS = [
   {
+    id: "signverse",
+    title: "SignVerse AI",
+    tag: "Real-Time Sign Language Translation Platform",
+    problem: "Millions of deaf and mute individuals face communication barriers in daily life because most people do not understand sign language. Existing solutions often require expensive hardware, cloud processing, or specialized equipment.",
+    solution: "Developed an AI-powered sign language recognition system that uses a standard webcam to detect hand gestures, classify them in real time, and convert them into text and speech.",
+    features: ["Real-Time Gesture Translation", "Webcam Landmark Tracking", "Text & Speech Synthesis", "Interactive Learning Hub", "Privacy-First Offline Execution"],
+    challenges: "Mitigating classification errors for similar hand gestures, handling dynamic lighting variations, and stabilizing real-time predictions for CPU execution.",
+    outcome: "Promotes accessibility and inclusive communication by enabling real-time interaction between sign language users and non-signers.",
+    stack: ["Python", "OpenCV", "MediaPipe", "PyTorch", "Streamlit", "NumPy", "SQLite"],
+    glyph: Hand,
+    demoLink: "https://vinu-signverseai.streamlit.app/",
+    sourceLink: "https://github.com/vineetsingh-007",
+    isFlagship: true,
+  },
+  {
     id: "aeris",
     title: "AERIS AI",
     tag: "Autonomous Emergency Response & Intelligent Surveillance Platform",
@@ -592,6 +607,7 @@ const PROJECTS = [
     glyph: Radar,
     demoLink: "https://pathfiner-vinu-007.streamlit.app/",
     sourceLink: "https://github.com/vineetsingh-007",
+    isFlagship: true,
   },
   {
     id: "campusone",
@@ -671,6 +687,7 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
 
   const renderVisual = () => {
     switch (p.id) {
+      case "signverse": return <SignVerseVisual isHovered={hovered} />;
       case "aeris": return <AerisAiVisual isHovered={hovered} />;
       case "campusone": return <CampusOneVisual isHovered={hovered} />;
       case "drone": return <DroneFloodVisual isHovered={hovered} />;
@@ -689,15 +706,26 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
       >
         <SpotlightTiltCard
           maxTilt={1.5}
-          className="group relative rounded-2xl glass border border-border/50 hover:border-cyan/35 overflow-hidden transition-colors duration-300"
+          className={`group relative rounded-2xl glass border overflow-hidden transition-all duration-300 ${
+            p.isFlagship
+              ? "border-cyan/35 shadow-[0_0_20px_rgba(34,211,238,0.03)] hover:border-cyan/60 hover:shadow-[0_0_30px_rgba(34,211,238,0.08)]"
+              : "border-border/50 hover:border-cyan/35"
+          }`}
         >
           <div className="grid lg:grid-cols-12 gap-0">
             {/* Info Column */}
             <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 space-y-6 border-b lg:border-b-0 lg:border-r border-border flex flex-col justify-between">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
-                    Case Study · 0{index + 1}
+                  <div className="flex items-center gap-3">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                      Case Study · 0{index + 1}
+                    </div>
+                    {p.isFlagship && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-cyan/10 border border-cyan/30 px-2 py-0.5 text-[8px] font-mono font-medium text-cyan tracking-wider uppercase">
+                        <Sparkles className="h-2.5 w-2.5 animate-pulse text-cyan" /> Flagship AI
+                      </span>
+                    )}
                   </div>
                   <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 border border-border group-hover:bg-cyan/10 group-hover:border-cyan/30 transition-colors duration-300">
                     <Glyph className="h-4 w-4 text-cyan transition-transform duration-300 group-hover:scale-110" />
