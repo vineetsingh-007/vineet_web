@@ -13,7 +13,7 @@ import {
   Magnetic, SpotlightTiltCard, ScrollReveal, ScrollRevealContainer, ScrollRevealItem
 } from "./AnimationPrimitives";
 import {
-  CampusOneVisual, DroneFloodVisual, PGConnectVisual, MicroservicesVisual, ReforestationVisual, AerisAiVisual, SignVerseVisual
+  CampusOneVisual, DroneFloodVisual, PGConnectVisual, MicroservicesVisual, AerisAiVisual, SignVerseVisual
 } from "./ProjectVisuals";
 import { SparklesCore } from "../ui/sparkles";
 
@@ -580,21 +580,6 @@ export function Skills() {
 
 const PROJECTS = [
   {
-    id: "signverse",
-    title: "SignVerse AI",
-    tag: "Real-Time Sign Language Translation Platform",
-    problem: "Millions of deaf and mute individuals face communication barriers in daily life because most people do not understand sign language. Existing solutions often require expensive hardware, cloud processing, or specialized equipment.",
-    solution: "Developed an AI-powered sign language recognition system that uses a standard webcam to detect hand gestures, classify them in real time, and convert them into text and speech.",
-    features: ["Real-Time Gesture Translation", "Webcam Landmark Tracking", "Text & Speech Synthesis", "Interactive Learning Hub", "Privacy-First Offline Execution"],
-    challenges: "Mitigating classification errors for similar hand gestures, handling dynamic lighting variations, and stabilizing real-time predictions for CPU execution.",
-    outcome: "Promotes accessibility and inclusive communication by enabling real-time interaction between sign language users and non-signers.",
-    stack: ["Python", "OpenCV", "MediaPipe", "PyTorch", "Streamlit", "NumPy", "SQLite"],
-    glyph: Hand,
-    demoLink: "https://vinu-signverseai.streamlit.app/",
-    sourceLink: "https://github.com/vineetsingh-007",
-    isFlagship: true,
-  },
-  {
     id: "aeris",
     title: "AERIS AI",
     tag: "Autonomous Emergency Response & Intelligent Surveillance Platform",
@@ -608,34 +593,39 @@ const PROJECTS = [
     demoLink: "https://pathfiner-vinu-007.streamlit.app/",
     sourceLink: "https://github.com/vineetsingh-007",
     isFlagship: true,
+    badgeText: "Flagship AI Project",
   },
   {
     id: "campusone",
     title: "CampusOne",
-    tag: "AI-Powered Campus Management Platform",
-    problem: "Campus services, academic resources and student communication were fragmented across multiple tools — hurting productivity and engagement.",
-    solution: "A unified full-stack platform that centralizes services, resources and communication, enhanced by an AI chatbot for instant student support.",
-    features: ["AI Chatbot Integration", "User Authentication", "Real-time Data", "Responsive UI/UX", "Web + Mobile Functions"],
-    challenges: "Designing a clean information architecture, securing user data, and integrating an AI assistant on top of dynamic MongoDB-backed APIs.",
-    outcome: "Published as a research paper at ICCET 2024 and used as a reference architecture for an AI-enabled campus platform.",
+    tag: "Research-Backed Full-Stack Campus Platform",
+    problem: "Academic administration, student services, and resource hubs were fragmented across outdated portals, leading to poor communication and user engagement.",
+    solution: "An end-to-end full-stack campus platform integrating real-time messaging, resource sharing, and an AI-driven chatbot assistant for automated student support.",
+    features: ["AI Chatbot Integration", "Academic Resource Hub", "Real-time Messaging", "Secure Authentication", "Interactive Dashboards"],
+    challenges: "Ensuring data consistency across active user sessions, optimizing MongoDB aggregation queries, and training the AI helper on campus protocols.",
+    outcome: "Published as a peer-reviewed research paper at ICCET 2024; currently serving as a reference architecture for smart campus platforms.",
     stack: ["React", "Node.js", "Express", "MongoDB", "AI"],
     glyph: GraduationCap,
     demoLink: "https://campus-1-final-ltst.vercel.app/",
     sourceLink: "https://github.com/vineetsingh-007",
+    isFlagship: true,
+    badgeText: "Research-Backed Project",
   },
   {
-    id: "drone",
-    title: "Drone Flood Response",
-    tag: "Drone-based Disaster Management System",
-    problem: "Flood-affected areas are often inaccessible to responders, delaying assessment and rescue coordination.",
-    solution: "A drone system using GPS, IoT sensors and a modified A* algorithm for intelligent flight navigation and real-time terrain analytics.",
-    features: ["Modified A* Algorithm", "GPS Integration", "IoT Sensor Comms", "Real-time Monitoring", "Path Optimization"],
-    challenges: "Adapting A* for dynamic obstacle and water-level data, and synchronizing live sensor telemetry with flight decisions.",
-    outcome: "Demonstrated a viable autonomous response prototype with optimized flight paths and live monitoring.",
-    stack: ["Python", "IoT", "GPS", "A*", "Sensors"],
-    glyph: SatIcon,
-    demoLink: "https://pathfiner-vinu-007.streamlit.app/",
+    id: "signverse",
+    title: "SignVerse AI",
+    tag: "Real-Time Sign Language Translation Platform",
+    problem: "Millions of deaf and mute individuals face communication barriers in daily life because most people do not understand sign language. Existing solutions often require expensive hardware, cloud processing, or specialized equipment.",
+    solution: "Developed an AI-powered sign language recognition system that uses a standard webcam to detect hand gestures, classify them in real time, and convert them into text and speech.",
+    features: ["Real-Time Gesture Translation", "Webcam Landmark Tracking", "Text & Speech Synthesis", "Interactive Learning Hub", "Privacy-First Offline Execution"],
+    challenges: "Mitigating classification errors for similar hand gestures, handling dynamic lighting variations, and stabilizing real-time predictions for CPU execution.",
+    outcome: "Promotes accessibility and inclusive communication by enabling real-time interaction between sign language users and non-signers.",
+    stack: ["Python", "OpenCV", "MediaPipe", "PyTorch", "Streamlit", "NumPy", "SQLite"],
+    glyph: Hand,
+    demoLink: "https://vinu-signverseai.streamlit.app/",
     sourceLink: "https://github.com/vineetsingh-007",
+    isFlagship: true,
+    badgeText: "Flagship AI & Accessibility Project",
   },
   {
     id: "pgconnect",
@@ -666,17 +656,17 @@ const PROJECTS = [
     sourceLink: "https://github.com/vineetsingh-007",
   },
   {
-    id: "reforestation",
-    title: "Drone Reforestation & Seed Bombing",
-    tag: "Autonomous Environmental Restoration System",
-    problem: "Reforestation at scale is slow, manual, and hard to execute in barren or unsafe terrain.",
-    solution: "An autonomous drone system that performs automated seed bombing using terrain scanning and AI-based route optimization.",
-    features: ["Autonomous Navigation", "Automated Seed Bombing", "Smart Terrain Scanning", "AI Route Optimization", "Sustainable Deployment"],
-    challenges: "Planning efficient coverage paths, modeling terrain constraints, and balancing payload with flight time.",
-    outcome: "Conceptualized and prototyped a scalable, eco-positive deployment system for restoration use cases.",
-    stack: ["Python", "Drone Sim", "GPS", "AI Nav", "GIS Mapping"],
-    glyph: Leaf,
-    demoLink: "https://github.com/vineetsingh-007",
+    id: "drone",
+    title: "Drone Flood Response",
+    tag: "Drone-based Disaster Management System",
+    problem: "Flood-affected areas are often inaccessible to responders, delaying assessment and rescue coordination.",
+    solution: "A drone system using GPS, IoT sensors and a modified A* algorithm for intelligent flight navigation and real-time terrain analytics.",
+    features: ["Modified A* Algorithm", "GPS Integration", "IoT Sensor Comms", "Real-time Monitoring", "Path Optimization"],
+    challenges: "Adapting A* for dynamic obstacle and water-level data, and synchronizing live sensor telemetry with flight decisions.",
+    outcome: "Demonstrated a viable autonomous response prototype with optimized flight paths and live monitoring.",
+    stack: ["Python", "IoT", "GPS", "A*", "Sensors"],
+    glyph: SatIcon,
+    demoLink: "https://pathfiner-vinu-007.streamlit.app/",
     sourceLink: "https://github.com/vineetsingh-007",
   },
 ];
@@ -693,7 +683,6 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
       case "drone": return <DroneFloodVisual isHovered={hovered} />;
       case "pgconnect": return <PGConnectVisual isHovered={hovered} />;
       case "microservices": return <MicroservicesVisual isHovered={hovered} />;
-      case "reforestation": return <ReforestationVisual isHovered={hovered} />;
       default: return null;
     }
   };
@@ -723,7 +712,7 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
                     </div>
                     {p.isFlagship && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-cyan/10 border border-cyan/30 px-2 py-0.5 text-[8px] font-mono font-medium text-cyan tracking-wider uppercase">
-                        <Sparkles className="h-2.5 w-2.5 animate-pulse text-cyan" /> Flagship AI
+                        <Sparkles className="h-2.5 w-2.5 animate-pulse text-cyan" /> {p.badgeText}
                       </span>
                     )}
                   </div>
@@ -876,6 +865,94 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
   );
 }
 
+function SupportingProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }) {
+  const Glyph = p.glyph;
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <ScrollReveal yOffset={25}>
+      <div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        className="h-full"
+      >
+        <SpotlightTiltCard
+          maxTilt={2}
+          className="group relative h-full rounded-xl glass border border-border/40 hover:border-cyan/30 p-5 flex flex-col justify-between gap-5 transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.02)]"
+        >
+          <div className="space-y-4">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-mono text-muted-foreground/60 tracking-wider">
+                System · 0{index + 1}
+              </span>
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 border border-border group-hover:bg-cyan/15 group-hover:border-cyan/30 transition-all duration-300">
+                <Glyph className="h-3.5 w-3.5 text-cyan" />
+              </div>
+            </div>
+
+            {/* Title & Tag */}
+            <div>
+              <h4 className="font-display text-lg font-semibold tracking-tight text-foreground transition-colors duration-300 group-hover:text-cyan">
+                {p.demoLink && p.demoLink !== "#" ? (
+                  <a href={p.demoLink} target="_blank" rel="noopener" className="hover:underline inline-flex items-center gap-1 cursor-pointer">
+                    {p.title}
+                    <ArrowUpRight className="h-4 w-4 text-cyan opacity-60 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                ) : (
+                  p.title
+                )}
+              </h4>
+              <p className="mt-1 text-[10px] text-muted-foreground tracking-wide leading-relaxed font-sans">{p.tag}</p>
+            </div>
+
+            {/* Brief Overview */}
+            <p className="text-xs text-foreground/80 leading-relaxed font-sans mt-2 line-clamp-3">
+              {p.solution}
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {/* Tech Stack */}
+            <div className="flex flex-wrap gap-1 border-t border-border/20 pt-3">
+              {p.stack.map((s) => (
+                <span key={s} className="text-[8px] font-mono rounded bg-white/[0.02] border border-border/50 px-1.5 py-0.5 text-muted-foreground hover:text-cyan hover:border-cyan/30 transition-colors duration-300">
+                  {s}
+                </span>
+              ))}
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-2.5 pt-2">
+              <a 
+                href={p.demoLink || "#"} 
+                target={p.demoLink && p.demoLink !== "#" ? "_blank" : undefined}
+                rel={p.demoLink && p.demoLink !== "#" ? "noopener" : undefined}
+                onClick={p.demoLink && p.demoLink !== "#" ? undefined : (e) => e.preventDefault()}
+                className={`flex-1 text-center py-1.5 rounded-lg text-[10px] font-medium transition-all ${
+                  p.demoLink && p.demoLink !== "#"
+                    ? "bg-primary text-primary-foreground hover:opacity-90 cursor-pointer"
+                    : "bg-white/5 text-muted-foreground/40 cursor-not-allowed opacity-50"
+                }`}
+              >
+                Live Demo
+              </a>
+              <a 
+                href={p.sourceLink || "https://github.com/vineetsingh-007"} 
+                target="_blank" 
+                rel="noopener" 
+                className="flex-1 text-center py-1.5 rounded-lg border border-border text-foreground text-[10px] font-medium hover:bg-white/5 transition-colors"
+              >
+                View Details
+              </a>
+            </div>
+          </div>
+        </SpotlightTiltCard>
+      </div>
+    </ScrollReveal>
+  );
+}
+
 export function Projects() {
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -884,6 +961,9 @@ export function Projects() {
   });
   const bgY = useTransform(scrollYProgress, [0, 1], [-100, 100]);
   const bgY2 = useTransform(scrollYProgress, [0, 1], [50, -50]);
+
+  const flagships = PROJECTS.filter(p => p.isFlagship);
+  const supportings = PROJECTS.filter(p => !p.isFlagship);
 
   return (
     <section id="projects" ref={targetRef} className="relative py-28 px-4 md:px-8 border-t border-border/50 overflow-hidden">
@@ -900,9 +980,30 @@ export function Projects() {
             subtitle="Each project is a case study — the problem it solves, the architecture, the tradeoffs, and what I learned."
           />
         </ScrollReveal>
-        <div className="space-y-6">
-          {PROJECTS.map((p, i) => <ProjectCard key={p.id} p={p} index={i} />)}
+
+        {/* Flagship Projects */}
+        <div className="space-y-10">
+          {flagships.map((p, i) => (
+            <ProjectCard key={p.id} p={p} index={i} />
+          ))}
         </div>
+
+        {/* Supporting Projects */}
+        {supportings.length > 0 && (
+          <div className="mt-28">
+            <ScrollReveal>
+              <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-cyan/70 mb-10">
+                <span className="inline-block h-px w-6 bg-cyan/30" />
+                Additional Production Systems
+              </div>
+            </ScrollReveal>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {supportings.map((p, i) => (
+                <SupportingProjectCard key={p.id} p={p} index={flagships.length + i} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
