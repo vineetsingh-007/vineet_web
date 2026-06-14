@@ -604,7 +604,7 @@ const PROJECTS = [
     outcome: "Demonstrated a viable autonomous response prototype with optimized flight paths and live monitoring.",
     stack: ["Python", "IoT", "GPS", "A*", "Sensors"],
     glyph: SatIcon,
-    demoLink: "https://github.com/vineetsingh-007",
+    demoLink: "https://pathfiner-vinu-007.streamlit.app/",
     sourceLink: "https://github.com/vineetsingh-007",
   },
   {
