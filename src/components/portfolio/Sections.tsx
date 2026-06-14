@@ -6,14 +6,14 @@ import {
   GraduationCap, Award, FlaskConical, BriefcaseBusiness,
   Container, Compass, Leaf, Satellite as SatIcon,
   Sigma, Coffee, MonitorCog, Trophy,
-  Lightbulb, Users, Layers, Sparkles, ShieldCheck, Rocket,
+  Lightbulb, Users, Layers, Sparkles, ShieldCheck, Rocket, Radar,
 } from "lucide-react";
 import { HolographicProfile } from "./HolographicProfile";
 import {
   Magnetic, SpotlightTiltCard, ScrollReveal, ScrollRevealContainer, ScrollRevealItem
 } from "./AnimationPrimitives";
 import {
-  CampusOneVisual, DroneFloodVisual, PGConnectVisual, MicroservicesVisual, ReforestationVisual
+  CampusOneVisual, DroneFloodVisual, PGConnectVisual, MicroservicesVisual, ReforestationVisual, AerisAiVisual
 } from "./ProjectVisuals";
 import { SparklesCore } from "../ui/sparkles";
 
@@ -580,6 +580,20 @@ export function Skills() {
 
 const PROJECTS = [
   {
+    id: "aeris",
+    title: "AERIS AI",
+    tag: "Autonomous Emergency Response & Intelligent Surveillance Platform",
+    problem: "During natural disasters, rescue teams struggle to locate survivors quickly due to dangerous environments and rapidly changing conditions. Traditional navigation systems focus solely on distance and fail to prioritize areas with the highest density of survivors.",
+    solution: "An AI-powered emergency response platform that combines intelligent routing, disaster simulation, and survivor detection to assist autonomous drones in identifying critical rescue zones and optimizing aid delivery.",
+    features: ["Autonomous Drone Navigation", "AI-Based Route Optimization", "Disaster Environment Simulation", "Survivor Detection System", "Dynamic Hazard Avoidance"],
+    challenges: "Training stable DQN reinforcement learning agents for battery-aware navigation under dynamic obstacles and synchronizing live telemetry streams on Streamlit.",
+    outcome: "Developed a live decision-support system featuring route comparison analytics and an interactive emergency operations interface.",
+    stack: ["Python", "PyTorch", "OpenCV", "Streamlit", "Gymnasium", "A* / Dijkstra", "SQLite"],
+    glyph: Radar,
+    demoLink: "https://pathfiner-vinu-007.streamlit.app/",
+    sourceLink: "https://github.com/vineetsingh-007",
+  },
+  {
     id: "campusone",
     title: "CampusOne",
     tag: "AI-Powered Campus Management Platform",
@@ -657,6 +671,7 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
 
   const renderVisual = () => {
     switch (p.id) {
+      case "aeris": return <AerisAiVisual isHovered={hovered} />;
       case "campusone": return <CampusOneVisual isHovered={hovered} />;
       case "drone": return <DroneFloodVisual isHovered={hovered} />;
       case "pgconnect": return <PGConnectVisual isHovered={hovered} />;
@@ -757,12 +772,12 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
                         : "bg-white/5 text-muted-foreground cursor-not-allowed opacity-50"
                     }`}
                   >
-                    <Rocket className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /> View Demo
+                    <Rocket className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /> Live Demo
                   </a>
                 </Magnetic>
                 <Magnetic range={40} strength={0.2}>
                   <a href={p.sourceLink || "https://github.com/vineetsingh-007"} target="_blank" rel="noopener" className="group inline-flex items-center gap-2 rounded-full border border-border text-foreground px-4 py-2 text-xs font-medium hover:bg-white/5 transition-colors">
-                    <Github className="h-3.5 w-3.5 transition-transform duration-300 group-hover:scale-110" /> Source Code
+                    <Github className="h-3.5 w-3.5 transition-transform duration-300 group-hover:scale-110" /> View Details
                   </a>
                 </Magnetic>
               </div>

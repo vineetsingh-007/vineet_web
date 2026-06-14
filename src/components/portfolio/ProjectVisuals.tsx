@@ -417,3 +417,164 @@ export function ReforestationVisual({ isHovered }: VisualProps) {
     </div>
   );
 }
+
+/* ----------------------------- 6. AERIS AI ----------------------------- */
+
+export function AerisAiVisual({ isHovered }: VisualProps) {
+  const [dronePos, setDronePos] = useState({ x: 10, y: 90 });
+  const [step, setStep] = useState(0);
+  const [battery, setBattery] = useState(100);
+  const [survivorsFound, setSurvivorsFound] = useState(0);
+  const [inferenceTime, setInferenceTime] = useState(12);
+
+  // Path coordinates for the drone simulation
+  const path = [
+    { x: 10, y: 90, status: "Takeoff" },
+    { x: 30, y: 80, status: "Scanning Area A" },
+    { x: 50, y: 70, status: "Avoiding Wildfire" },
+    { x: 60, y: 45, status: "Survivor Located" },
+    { x: 80, y: 35, status: "Dropping Aid" },
+    { x: 90, y: 20, status: "Heading to Base" },
+  ];
+
+  useEffect(() => {
+    const intervalTime = isHovered ? 600 : 1200;
+    const interval = setInterval(() => {
+      setStep(prev => {
+        const next = (prev + 1) % path.length;
+        setDronePos(path[next]);
+        
+        // Dynamic stats
+        setBattery(b => {
+          if (next === 0) return 100;
+          return Math.max(15, b - Math.floor(Math.random() * 5) - 3);
+        });
+        
+        setSurvivorsFound(s => {
+          if (next === 0) return 0;
+          if (next === 3) return s + 2;
+          if (next === 4) return s + 1;
+          return s;
+        });
+
+        setInferenceTime(() => Math.floor(Math.random() * 6) + 8);
+        
+        return next;
+      });
+    }, intervalTime);
+    return () => clearInterval(interval);
+  }, [isHovered]);
+
+  const currentPoint = path[step];
+
+  return (
+    <div className="relative w-full h-[220px] bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
+      {/* HUD Header */}
+      <div className="flex items-center justify-between border-b border-white/5 pb-1.5 text-[10px] text-foreground/80">
+        <div className="flex items-center gap-1.5">
+          <div className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
+          <span className="font-semibold tracking-wide text-rose-400">AERIS MISSION CONTROL</span>
+        </div>
+        <span className="text-cyan font-semibold">DQN_AGENT_V2</span>
+      </div>
+
+      {/* Main split display: Map preview left, Stats right */}
+      <div className="flex-1 flex gap-3 my-2 overflow-hidden">
+        {/* Drone Map visualization (left) */}
+        <div className="flex-1 rounded bg-white/[0.01] border border-white/5 relative overflow-hidden flex flex-col justify-between p-2">
+          {/* Grid lines overlay */}
+          <div className="absolute inset-0 grid grid-cols-6 grid-rows-6 opacity-[0.03] pointer-events-none">
+            {Array.from({ length: 36 }).map((_, i) => (
+              <div key={i} className="border-t border-l border-white" />
+            ))}
+          </div>
+
+          {/* Map Status indicator */}
+          <div className="text-[7px] text-cyan/70 z-10 flex justify-between">
+            <span>ALT: 45m</span>
+            <span className="text-amber-500 animate-pulse">{currentPoint.status}</span>
+          </div>
+
+          {/* SVG Flight Path visualization */}
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+            <svg className="w-full h-full p-4" viewBox="0 0 100 100" preserveAspectRatio="none">
+              {/* Path lines */}
+              <polyline
+                points={path.map(p => `${p.x},${p.y}`).join(" ")}
+                fill="none"
+                stroke="rgba(34, 211, 238, 0.15)"
+                strokeWidth="1.5"
+                strokeDasharray="3 3"
+              />
+              <polyline
+                points={path.slice(0, step + 1).map(p => `${p.x},${p.y}`).join(" ")}
+                fill="none"
+                stroke="rgb(34, 211, 238)"
+                strokeWidth="2"
+              />
+              {/* Fire/Hazard zone */}
+              <circle cx="50" cy="65" r="10" fill="rgba(244, 63, 94, 0.1)" stroke="rgba(244, 63, 94, 0.3)" strokeWidth="0.8" />
+              {/* Survivor hot spots */}
+              <circle cx="60" cy="45" r="4" fill="rgba(16, 185, 129, 0.15)" stroke="rgba(16, 185, 129, 0.4)" strokeWidth="0.5" />
+              <circle cx="80" cy="35" r="4" fill="rgba(16, 185, 129, 0.15)" stroke="rgba(16, 185, 129, 0.4)" strokeWidth="0.5" />
+
+              {/* Active Drone Node */}
+              <circle
+                cx={dronePos.x}
+                cy={dronePos.y}
+                r="3.5"
+                fill="#22d3ee"
+                className="transition-all duration-300"
+              />
+            </svg>
+          </div>
+
+          {/* Telemetry bottom */}
+          <div className="z-10 text-[7px] flex justify-between items-center text-muted-foreground/80 mt-auto">
+            <span>LAT: 18.5204° N</span>
+            <span>LNG: 73.8567° E</span>
+          </div>
+        </div>
+
+        {/* Live Mission Statistics (right) */}
+        <div className="w-[100px] flex flex-col gap-1.5 justify-center">
+          {/* Stat Box 1 */}
+          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
+            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Survivors</span>
+            <span className="text-[11px] font-bold text-emerald-400 mt-0.5 flex items-center justify-between">
+              {survivorsFound} LOCATED
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            </span>
+          </div>
+          {/* Stat Box 2 */}
+          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
+            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Drone Battery</span>
+            <span className={`text-[11px] font-bold mt-0.5 flex items-center justify-between ${battery < 30 ? "text-rose-500" : "text-cyan"}`}>
+              {battery}%
+              <span className={`h-1.5 w-3 rounded-sm border ${battery < 30 ? "border-rose-500/50" : "border-cyan/50"} flex items-center p-[1px]`}>
+                <span className={`h-full ${battery < 30 ? "bg-rose-500" : "bg-cyan"}`} style={{ width: `${battery}%` }} />
+              </span>
+            </span>
+          </div>
+          {/* Stat Box 3 */}
+          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
+            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">AI Inference</span>
+            <span className="text-[11px] font-bold text-foreground/90 mt-0.5">
+              {inferenceTime} ms
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* EOC Footer Status */}
+      <div className="flex items-center justify-between text-[8px] border-t border-white/5 pt-1.5">
+        <div className="flex items-center gap-1">
+          <ShieldAlert className="h-3 w-3 text-amber-500 animate-pulse" />
+          <span className="text-muted-foreground">HAZARD AVOIDANCE:</span>
+          <span className="text-emerald-400 font-bold">READY</span>
+        </div>
+        <div className="text-cyan/80">GRID: 100x100</div>
+      </div>
+    </div>
+  );
+}
