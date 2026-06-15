@@ -19,6 +19,21 @@ type ParticlesProps = {
 };
 
 export const SparklesCore = (props: ParticlesProps) => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsMobile(
+        window.matchMedia("(pointer: coarse)").matches ||
+        window.innerWidth < 768
+      );
+    }
+  }, []);
+
+  if (isMobile) {
+    return null;
+  }
+
   return (
     <ParticlesProvider init={async (engine) => { await loadSlim(engine); }}>
       <SparklesCoreInner {...props} />
