@@ -1,4 +1,4 @@
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import {
   Github, Linkedin, Mail, MapPin, FileText, Download, ArrowRight, ArrowUpRight,
@@ -7,6 +7,7 @@ import {
   Container, Compass, Leaf, Satellite as SatIcon,
   Sigma, Coffee, MonitorCog, Trophy,
   Lightbulb, Users, Layers, Sparkles, ShieldCheck, Rocket, Radar, Eye, Hand,
+  Menu, X
 } from "lucide-react";
 import { HolographicProfile } from "./HolographicProfile";
 import {
@@ -50,6 +51,8 @@ const NAV_LINKS = [
 export function Nav() {
   const [active, setActive] = useState("hero");
   const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 24);
@@ -66,45 +69,114 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const handleLinkClick = (id: string) => {
+    setIsOpen(false);
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <header className="fixed top-0 inset-x-0 z-50 pt-4">
-      <div className={`mx-auto w-[min(1180px,94vw)] flex items-center gap-3 rounded-full px-4 py-2.5 transition-all ${scrolled ? "glass-strong shadow-[0_10px_40px_-20px_rgba(0,0,0,0.6)]" : "glass"}`}>
-        <Magnetic range={40} strength={0.25}>
-          <a href="#hero" className="flex items-center gap-2.5">
-            <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent text-[11px] font-bold text-primary-foreground">
-              VS
-            </span>
-            <span className="font-display text-sm font-semibold tracking-tight hidden sm:inline">Vineet Singh</span>
-          </a>
-        </Magnetic>
-        <nav className="ml-6 hidden md:flex items-center gap-1 text-sm">
-          {NAV_LINKS.map((s) => (
-            <a
-              key={s.id}
-              href={`#${s.id}`}
-              className={`relative px-3 py-1.5 transition-colors duration-200 ${active === s.id ? "text-cyan font-medium" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              {active === s.id && (
-                <motion.span
-                  layoutId="active-nav-underline"
-                  className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r from-cyan to-violet"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-              {s.label}
-            </a>
-          ))}
-        </nav>
-        <div className="ml-auto">
-          <Magnetic range={50} strength={0.2}>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-1.5 rounded-full bg-primary text-primary-foreground px-4 py-2 text-xs font-medium hover:opacity-90 transition-opacity"
-            >
-              Get in touch <ArrowRight className="h-3.5 w-3.5" />
+      <div className="mx-auto w-[min(1180px,94vw)] flex flex-col gap-2">
+        {/* Main Navbar */}
+        <div className={`w-full flex items-center gap-3 rounded-full px-4 py-2.5 transition-all ${scrolled || isOpen ? "glass-strong shadow-[0_10px_40px_-20px_rgba(0,0,0,0.6)]" : "glass"}`}>
+          <Magnetic range={40} strength={0.25}>
+            <a href="#hero" onClick={() => setIsOpen(false)} className="flex items-center gap-2.5">
+              <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent text-[11px] font-bold text-primary-foreground">
+                VS
+              </span>
+              <span className="font-display text-sm font-semibold tracking-tight">Vineet Singh</span>
             </a>
           </Magnetic>
+
+          {/* Desktop Nav */}
+          <nav className="ml-6 hidden md:flex items-center gap-1 text-sm">
+            {NAV_LINKS.map((s) => (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className={`relative px-3 py-1.5 transition-colors duration-200 ${active === s.id ? "text-cyan font-medium" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {active === s.id && (
+                  <motion.span
+                    layoutId="active-nav-underline"
+                    className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r from-cyan to-violet"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                {s.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Action Button & Toggle */}
+          <div className="ml-auto flex items-center gap-2">
+            <div className="hidden md:block">
+              <Magnetic range={50} strength={0.2}>
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-primary text-primary-foreground px-4 py-2 text-xs font-medium hover:opacity-90 transition-opacity"
+                >
+                  Get in touch <ArrowRight className="h-3.5 w-3.5" />
+                </a>
+              </Magnetic>
+            </div>
+
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-full border border-border md:hidden text-foreground hover:bg-white/5 transition-colors focus:outline-none"
+              aria-label="Toggle Menu"
+            >
+              {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Navigation Dropdown */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden w-full glass-strong rounded-2xl p-4 flex flex-col gap-1.5 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.8)] border border-border/80"
+            >
+              {NAV_LINKS.map((s) => (
+                <a
+                  key={s.id}
+                  href={`#${s.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleLinkClick(s.id);
+                  }}
+                  className={`w-full px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center justify-between ${
+                    active === s.id
+                      ? "bg-cyan/10 text-cyan border border-cyan/20"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/[0.02] border border-transparent"
+                  }`}
+                >
+                  {s.label}
+                  {active === s.id && <span className="h-1.5 w-1.5 rounded-full bg-cyan" />}
+                </a>
+              ))}
+              <div className="border-t border-border/40 my-2 pt-2">
+                <a
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleLinkClick("contact");
+                  }}
+                  className="w-full text-center inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary text-primary-foreground py-3 text-sm font-medium hover:opacity-90 transition-opacity"
+                >
+                  Get in touch <ArrowRight className="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );
@@ -703,7 +775,7 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
         >
           <div className="grid lg:grid-cols-12 gap-0">
             {/* Info Column */}
-            <div className="lg:col-span-7 p-6 sm:p-8 lg:p-10 space-y-6 border-b lg:border-b-0 lg:border-r border-border flex flex-col justify-between">
+            <div className="lg:col-span-7 p-4 sm:p-8 lg:p-10 space-y-6 border-b lg:border-b-0 lg:border-r border-border flex flex-col justify-between">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -806,7 +878,7 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
                 href={p.demoLink}
                 target="_blank"
                 rel="noopener"
-                className="lg:col-span-5 p-6 sm:p-8 lg:p-10 bg-white/[0.005] hover:bg-white/[0.015] transition-colors flex flex-col justify-between gap-6 cursor-pointer group/visual-link border-l border-border/50 lg:border-l-0"
+                className="lg:col-span-5 p-4 sm:p-8 lg:p-10 bg-white/[0.005] hover:bg-white/[0.015] transition-colors flex flex-col justify-between gap-6 cursor-pointer group/visual-link border-t lg:border-t-0 lg:border-l border-border/50"
               >
                 <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground w-full flex justify-between items-center">
                   <span className="flex items-center gap-1.5">
@@ -834,7 +906,7 @@ function ProjectCard({ p, index }: { p: typeof PROJECTS[number]; index: number }
                 </div>
               </a>
             ) : (
-              <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 bg-white/[0.005] flex flex-col justify-between gap-6 border-l border-border/50 lg:border-l-0">
+              <div className="lg:col-span-5 p-4 sm:p-8 lg:p-10 bg-white/[0.005] flex flex-col justify-between gap-6 border-t lg:border-t-0 lg:border-l border-border/50">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground w-full flex justify-between items-center">
                   <span>Interactive Sandbox</span>
                   <span className="text-cyan/70 font-semibold">X-0{index + 1}</span>

@@ -3,6 +3,8 @@ import Lenis from "lenis";
 
 export function SmoothScroll() {
   useEffect(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
     const lenis = new Lenis({
       duration: 0.9,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

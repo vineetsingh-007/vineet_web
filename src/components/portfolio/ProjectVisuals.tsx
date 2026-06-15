@@ -385,9 +385,9 @@ export function AerisAiVisual({ isHovered }: VisualProps) {
       </div>
 
       {/* Main split display: Map preview left, Stats right */}
-      <div className="flex-1 flex gap-3 my-2 overflow-hidden">
+      <div className="flex-1 flex flex-col sm:flex-row gap-2 sm:gap-3 my-1.5 sm:my-2 overflow-hidden">
         {/* Drone Map visualization (left) */}
-        <div className="flex-1 rounded bg-white/[0.01] border border-white/5 relative overflow-hidden flex flex-col justify-between p-2">
+        <div className="flex-[2] rounded bg-white/[0.01] border border-white/5 relative overflow-hidden flex flex-col justify-between p-1.5 sm:p-2 min-h-[95px] sm:min-h-0">
           {/* Grid lines overlay */}
           <div className="absolute inset-0 grid grid-cols-6 grid-rows-6 opacity-[0.03] pointer-events-none">
             {Array.from({ length: 36 }).map((_, i) => (
@@ -403,7 +403,7 @@ export function AerisAiVisual({ isHovered }: VisualProps) {
 
           {/* SVG Flight Path visualization */}
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-            <svg className="w-full h-full p-4" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <svg className="w-full h-full p-2.5 sm:p-4" viewBox="0 0 100 100" preserveAspectRatio="none">
               {/* Path lines */}
               <polyline
                 points={path.map(p => `${p.x},${p.y}`).join(" ")}
@@ -443,29 +443,29 @@ export function AerisAiVisual({ isHovered }: VisualProps) {
         </div>
 
         {/* Live Mission Statistics (right) */}
-        <div className="w-[100px] flex flex-col gap-1.5 justify-center">
+        <div className="w-full sm:w-[100px] flex flex-row sm:flex-col gap-1 sm:gap-1.5 justify-between sm:justify-center">
           {/* Stat Box 1 */}
-          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
-            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Survivors</span>
-            <span className="text-[11px] font-bold text-emerald-400 mt-0.5 flex items-center justify-between">
-              {survivorsFound} LOCATED
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="flex-1 sm:flex-none bg-white/[0.02] border border-white/5 rounded p-1 sm:p-1.5 flex flex-col justify-center">
+            <span className="text-[6px] sm:text-[7px] text-muted-foreground uppercase tracking-wider">Survivors</span>
+            <span className="text-[9px] sm:text-[11px] font-bold text-emerald-400 mt-0.5 flex items-center justify-between">
+              {survivorsFound} LOC
+              <span className="hidden sm:inline h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
             </span>
           </div>
           {/* Stat Box 2 */}
-          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
-            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Drone Battery</span>
-            <span className={`text-[11px] font-bold mt-0.5 flex items-center justify-between ${battery < 30 ? "text-rose-500" : "text-cyan"}`}>
+          <div className="flex-1 sm:flex-none bg-white/[0.02] border border-white/5 rounded p-1 sm:p-1.5 flex flex-col justify-center">
+            <span className="text-[6px] sm:text-[7px] text-muted-foreground uppercase tracking-wider">Battery</span>
+            <span className={`text-[9px] sm:text-[11px] font-bold mt-0.5 flex items-center justify-between ${battery < 30 ? "text-rose-500" : "text-cyan"}`}>
               {battery}%
-              <span className={`h-1.5 w-3 rounded-sm border ${battery < 30 ? "border-rose-500/50" : "border-cyan/50"} flex items-center p-[1px]`}>
+              <span className={`hidden sm:flex h-1.5 w-3 rounded-sm border ${battery < 30 ? "border-rose-500/50" : "border-cyan/50"} items-center p-[1px]`}>
                 <span className={`h-full ${battery < 30 ? "bg-rose-500" : "bg-cyan"}`} style={{ width: `${battery}%` }} />
               </span>
             </span>
           </div>
           {/* Stat Box 3 */}
-          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
-            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">AI Inference</span>
-            <span className="text-[11px] font-bold text-foreground/90 mt-0.5">
+          <div className="flex-1 sm:flex-none bg-white/[0.02] border border-white/5 rounded p-1 sm:p-1.5 flex flex-col justify-center">
+            <span className="text-[6px] sm:text-[7px] text-muted-foreground uppercase tracking-wider">Inference</span>
+            <span className="text-[9px] sm:text-[11px] font-bold text-foreground/90 mt-0.5">
               {inferenceTime} ms
             </span>
           </div>
@@ -582,9 +582,9 @@ export function SignVerseVisual({ isHovered }: VisualProps) {
       </div>
 
       {/* Main Layout */}
-      <div className="flex-1 flex gap-3 my-2 overflow-hidden">
+      <div className="flex-1 flex flex-col sm:flex-row gap-2 sm:gap-3 my-1.5 sm:my-2 overflow-hidden">
         {/* Camera Feed view (left) */}
-        <div className="flex-1 rounded bg-white/[0.01] border border-white/5 relative overflow-hidden flex flex-col justify-between p-2">
+        <div className="flex-[2] rounded bg-white/[0.01] border border-white/5 relative overflow-hidden flex flex-col justify-between p-1.5 sm:p-2 min-h-[95px] sm:min-h-0">
           {/* Target Box corners overlay */}
           <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-cyan/50" />
           <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-cyan/50" />
@@ -599,7 +599,7 @@ export function SignVerseVisual({ isHovered }: VisualProps) {
 
           {/* SVG Hand Landmark Drawing */}
           <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-            <svg className="w-full h-full p-4" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <svg className="w-full h-full p-2.5 sm:p-4" viewBox="0 0 100 100" preserveAspectRatio="none">
               {/* Hand connections (skeleton lines) */}
               {fingers.map((f, i) => (
                 <line
@@ -637,25 +637,25 @@ export function SignVerseVisual({ isHovered }: VisualProps) {
         </div>
 
         {/* Inference details (right) */}
-        <div className="w-[100px] flex flex-col gap-1.5 justify-center">
+        <div className="w-full sm:w-[100px] flex flex-row sm:flex-col gap-1 sm:gap-1.5 justify-between sm:justify-center">
           {/* Stat Box 1 */}
-          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
-            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Prediction</span>
-            <span className="text-[14px] font-bold text-cyan mt-0.5 text-center bg-cyan/5 border border-cyan/10 rounded py-0.5">
+          <div className="flex-1 sm:flex-none bg-white/[0.02] border border-white/5 rounded p-1 sm:p-1.5 flex flex-col justify-center">
+            <span className="text-[6px] sm:text-[7px] text-muted-foreground uppercase tracking-wider">Prediction</span>
+            <span className="text-[10px] sm:text-[14px] font-bold text-cyan mt-0.5 text-center bg-cyan/5 border border-cyan/10 rounded py-0.5">
               "{detectedChar === " " ? "SPACE" : detectedChar}"
             </span>
           </div>
           {/* Stat Box 2 */}
-          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
-            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Confidence</span>
-            <span className="text-[11px] font-bold text-emerald-400 mt-0.5">
+          <div className="flex-1 sm:flex-none bg-white/[0.02] border border-white/5 rounded p-1 sm:p-1.5 flex flex-col justify-center">
+            <span className="text-[6px] sm:text-[7px] text-muted-foreground uppercase tracking-wider">Confidence</span>
+            <span className="text-[9px] sm:text-[11px] font-bold text-emerald-400 mt-0.5">
               {confidence}%
             </span>
           </div>
           {/* Stat Box 3 */}
-          <div className="bg-white/[0.02] border border-white/5 rounded p-1.5 flex flex-col">
-            <span className="text-[7px] text-muted-foreground uppercase tracking-wider">Models</span>
-            <span className="text-[8px] font-semibold text-foreground/80 mt-0.5 truncate">
+          <div className="flex-1 sm:flex-none bg-white/[0.02] border border-white/5 rounded p-1 sm:p-1.5 flex flex-col justify-center min-w-0">
+            <span className="text-[6px] sm:text-[7px] text-muted-foreground uppercase tracking-wider">Models</span>
+            <span className="text-[7px] sm:text-[8px] font-semibold text-foreground/80 mt-0.5 truncate">
               MediaPipe + PyTorch
             </span>
           </div>

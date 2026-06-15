@@ -5,10 +5,14 @@ export function CustomCursor() {
   const ring = useRef<HTMLDivElement>(null);
   const [hoverState, setHoverState] = useState<"default" | "interactive" | "card">("default");
   const [isVisible, setIsVisible] = useState(false);
+  const [isCoarse, setIsCoarse] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      setIsCoarse(true);
+      return;
+    }
 
     let mx = window.innerWidth / 2;
     let my = window.innerHeight / 2;
@@ -152,6 +156,8 @@ export function CustomCursor() {
       backgroundColor: "rgba(255, 255, 255, 0.95)",
     };
   };
+
+  if (isCoarse) return null;
 
   return (
     <>
