@@ -19,6 +19,11 @@ export function HolographicProfile() {
   const spotlightX = useMotionValue(0);
   const spotlightY = useMotionValue(0);
 
+  const spotlightBackground = useTransform(
+    [spotlightX, spotlightY],
+    ([xVal, yVal]) => `radial-gradient(280px circle at ${xVal}px ${yVal}px, rgba(140, 210, 255, 0.15), transparent 85%)`
+  );
+
   function onMove(e: React.MouseEvent) {
     const r = ref.current?.getBoundingClientRect();
     if (!r) return;
@@ -38,9 +43,16 @@ export function HolographicProfile() {
     setHovered(false);
   }
 
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+  });
   useEffect(() => {
-    setIsMobile(window.matchMedia("(pointer: coarse)").matches);
+    const check = () => {
+      setIsMobile(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768);
+    };
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   return (
@@ -67,7 +79,7 @@ export function HolographicProfile() {
         <div className="pointer-events-none absolute -inset-8 rounded-3xl bg-[radial-gradient(circle_at_center,rgba(120,200,255,0.08),transparent_60%)] blur-2xl animate-hud-pulse" />
         <motion.div
           className="relative h-full w-full rounded-2xl overflow-hidden glass-strong"
-          style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
+          style={{ rotateX: isMobile ? 0 : rotX, rotateY: isMobile ? 0 : rotY, transformStyle: "preserve-3d" }}
         >
           <motion.img
             src={profileImg}
@@ -86,10 +98,7 @@ export function HolographicProfile() {
               className="pointer-events-none absolute -inset-px z-30 transition-opacity duration-300"
               style={{
                 opacity: hovered ? 1 : 0,
-                background: useTransform(
-                  [spotlightX, spotlightY],
-                  ([xVal, yVal]) => `radial-gradient(280px circle at ${xVal}px ${yVal}px, rgba(140, 210, 255, 0.15), transparent 85%)`
-                ),
+                background: spotlightBackground,
               }}
             />
           )}

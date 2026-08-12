@@ -115,6 +115,11 @@ export function SpotlightTiltCard({
   const rotateX = useSpring(tiltX, springConfig);
   const rotateY = useSpring(tiltY, springConfig);
 
+  const spotlightBackground = useTransform(
+    [spotlightX, spotlightY],
+    ([xVal, yVal]) => `radial-gradient(350px circle at ${xVal}px ${yVal}px, ${glowColor}, transparent 80%)`
+  );
+
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current || (isMobile && disabledOnMobile)) return;
     const rect = cardRef.current.getBoundingClientRect();
@@ -165,10 +170,7 @@ export function SpotlightTiltCard({
             className="pointer-events-none absolute -inset-px rounded-[inherit] z-30 transition-opacity duration-300"
             style={{
               opacity: hovered ? 1 : 0,
-              background: useTransform(
-                [spotlightX, spotlightY],
-                ([xVal, yVal]) => `radial-gradient(350px circle at ${xVal}px ${yVal}px, ${glowColor}, transparent 80%)`
-              ),
+              background: spotlightBackground,
             }}
           />
         )}

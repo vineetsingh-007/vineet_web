@@ -1092,6 +1092,8 @@ export function Experience() {
   });
 
   const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 20 });
+  const bottomNodeScale = useTransform(scrollYProgress, [0.85, 1], [0, 1]);
+  const bottomNodeOpacity = useTransform(scrollYProgress, [0.85, 1], [0, 1]);
 
   return (
     <section id="experience" ref={containerRef} className="relative py-28 px-4 md:px-8 border-t border-border/50">
@@ -1122,8 +1124,8 @@ export function Experience() {
             {/* Bottom Node */}
             <motion.div
               style={{
-                scale: useTransform(scrollYProgress, [0.85, 1], [0, 1]),
-                opacity: useTransform(scrollYProgress, [0.85, 1], [0, 1])
+                scale: bottomNodeScale,
+                opacity: bottomNodeOpacity
               }}
               className="absolute left-[12px] bottom-0 z-10 -translate-x-[35%] flex h-3 w-3 items-center justify-center"
             >
