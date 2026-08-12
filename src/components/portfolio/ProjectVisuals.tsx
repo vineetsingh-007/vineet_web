@@ -1,9 +1,33 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Bot, Send, Navigation, MapPin, Star, Terminal, ShieldAlert, Cpu, Check, Compass, Eye, ShieldCheck } from "lucide-react";
 
 interface VisualProps {
   isHovered: boolean;
+}
+
+function useIsVisible() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (!ref.current || typeof IntersectionObserver === "undefined") {
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, isVisible };
 }
 
 /* ----------------------------- 1. CAMPUSONE ----------------------------- */
@@ -81,6 +105,7 @@ export function CampusOneVisual({ isHovered }: VisualProps) {
 /* ----------------------------- 2. DRONE FLOOD ----------------------------- */
 
 export function DroneFloodVisual({ isHovered }: VisualProps) {
+  const { ref, isVisible } = useIsVisible();
   // A* grid navigation simulation
   const [dronePos, setDronePos] = useState({ x: 0, y: 0 });
   const [step, setStep] = useState(0);
@@ -103,6 +128,7 @@ export function DroneFloodVisual({ isHovered }: VisualProps) {
   ];
 
   useEffect(() => {
+    if (!isVisible) return;
     const intervalTime = isHovered ? 400 : 850;
     const interval = setInterval(() => {
       setStep(prev => {
@@ -112,10 +138,10 @@ export function DroneFloodVisual({ isHovered }: VisualProps) {
       });
     }, intervalTime);
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, isVisible]);
 
   return (
-    <div className="relative w-full h-[220px] bg-black/20 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-4">
+    <div ref={ref} className="relative w-full h-[220px] bg-black/20 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-4">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/5 pb-2">
         <div className="flex items-center gap-2">
@@ -237,6 +263,7 @@ export function PGConnectVisual({ isHovered }: VisualProps) {
 /* ----------------------------- 4. MICROSERVICES COLLAB ----------------------------- */
 
 export function MicroservicesVisual({ isHovered }: VisualProps) {
+  const { ref, isVisible } = useIsVisible();
   const [logs, setLogs] = useState<string[]>([
     "docker-compose.yml parsed successfully.",
     "Container db-mongo starting...",
@@ -260,6 +287,7 @@ export function MicroservicesVisual({ isHovered }: VisualProps) {
   ];
 
   useEffect(() => {
+    if (!isVisible) return;
     if (isHovered) {
       let currentIdx = 5;
       const interval = setInterval(() => {
@@ -287,10 +315,10 @@ export function MicroservicesVisual({ isHovered }: VisualProps) {
         "Container auth-node ready. [OK]"
       ]);
     }
-  }, [isHovered]);
+  }, [isHovered, isVisible]);
 
   return (
-    <div className="relative w-full h-[220px] bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-4 font-mono text-[9px] text-muted-foreground leading-relaxed">
+    <div ref={ref} className="relative w-full h-[220px] bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-4 font-mono text-[9px] text-muted-foreground leading-relaxed">
       {/* Terminal Header */}
       <div className="flex items-center justify-between border-b border-white/5 pb-2 text-[10px] text-foreground/80">
         <div className="flex items-center gap-1.5">
@@ -327,6 +355,7 @@ export function MicroservicesVisual({ isHovered }: VisualProps) {
 /* ----------------------------- 6. AERIS AI ----------------------------- */
 
 export function AerisAiVisual({ isHovered }: VisualProps) {
+  const { ref, isVisible } = useIsVisible();
   const [dronePos, setDronePos] = useState({ x: 10, y: 90 });
   const [step, setStep] = useState(0);
   const [battery, setBattery] = useState(100);
@@ -344,6 +373,7 @@ export function AerisAiVisual({ isHovered }: VisualProps) {
   ];
 
   useEffect(() => {
+    if (!isVisible) return;
     const intervalTime = isHovered ? 600 : 1200;
     const interval = setInterval(() => {
       setStep(prev => {
@@ -369,12 +399,12 @@ export function AerisAiVisual({ isHovered }: VisualProps) {
       });
     }, intervalTime);
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, isVisible]);
 
   const currentPoint = path[step];
 
   return (
-    <div className="relative w-full min-h-[220px] h-auto bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
+    <div ref={ref} className="relative w-full min-h-[220px] h-auto bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
       {/* HUD Header */}
       <div className="flex items-center justify-between border-b border-white/5 pb-1.5 text-[10px] text-foreground/80">
         <div className="flex items-center gap-1.5">
@@ -488,6 +518,7 @@ export function AerisAiVisual({ isHovered }: VisualProps) {
 /* ----------------------------- 7. SIGNVERSE AI ----------------------------- */
 
 export function SignVerseVisual({ isHovered }: VisualProps) {
+  const { ref, isVisible } = useIsVisible();
   const [detectedChar, setDetectedChar] = useState("H");
   const [word, setWord] = useState("");
   const [step, setStep] = useState(0);
@@ -505,6 +536,7 @@ export function SignVerseVisual({ isHovered }: VisualProps) {
   ];
 
   useEffect(() => {
+    if (!isVisible) return;
     const intervalTime = isHovered ? 800 : 1600;
     const interval = setInterval(() => {
       setStep(prev => {
@@ -518,7 +550,7 @@ export function SignVerseVisual({ isHovered }: VisualProps) {
       });
     }, intervalTime);
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, isVisible]);
 
   const current = sequence[step];
 
@@ -568,7 +600,7 @@ export function SignVerseVisual({ isHovered }: VisualProps) {
   const { wrist, fingers } = getHandLandmarks(current.handState);
 
   return (
-    <div className="relative w-full min-h-[220px] h-auto bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
+    <div ref={ref} className="relative w-full min-h-[220px] h-auto bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
       {/* HUD Header */}
       <div className="flex items-center justify-between border-b border-white/5 pb-1.5 text-[10px] text-foreground/80">
         <div className="flex items-center gap-1.5">

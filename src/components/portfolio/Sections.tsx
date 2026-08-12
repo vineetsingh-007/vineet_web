@@ -54,19 +54,43 @@ export function Nav() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const onScroll = () => {
-      setScrolled(window.scrollY > 24);
-      const y = window.scrollY + window.innerHeight * 0.3;
-      let cur = "hero";
-      for (const s of [{ id: "hero" }, ...NAV_LINKS]) {
-        const el = document.getElementById(s.id);
-        if (el && el.offsetTop <= y) cur = s.id;
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 24);
+          ticking = false;
+        });
+        ticking = true;
       }
-      setActive(cur);
     };
-    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    onScroll();
+
+    const sectionIds = ["hero", ...NAV_LINKS.map((l) => l.id)];
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -60% 0px",
+      threshold: 0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      observer.disconnect();
+    };
   }, []);
 
   const handleLinkClick = (id: string) => {
@@ -1404,7 +1428,7 @@ export function Footer() {
     <footer className="relative py-10 px-4 md:px-8 border-t border-border">
       <div className="mx-auto w-[min(1180px,94vw)] flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="text-xs text-muted-foreground font-mono">
-          © {new Date().getFullYear()} Vineet Singh. Crafted with care.
+          © {new Date().getFullYear()} Vineet Singh.
         </div>
         <div className="flex gap-4 text-muted-foreground">
           {[

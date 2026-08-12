@@ -19,4 +19,15 @@ export default defineConfig({
     host: "127.0.0.1",
     port: 5173,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-framer": ["framer-motion"],
+          "vendor-particles": ["@tsparticles/engine", "@tsparticles/react", "@tsparticles/slim"],
+          "vendor-icons": ["lucide-react"],
+        },
+      },
+    },
+  },
 });
