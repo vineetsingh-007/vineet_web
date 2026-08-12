@@ -19,14 +19,21 @@ type ParticlesProps = {
 };
 
 export const SparklesCore = (props: ParticlesProps) => {
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+  });
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
-      setIsMobile(
-        window.matchMedia("(pointer: coarse)").matches ||
-        window.innerWidth < 768
-      );
+      const check = () => {
+        setIsMobile(
+          window.matchMedia("(pointer: coarse)").matches ||
+          window.innerWidth < 768
+        );
+      };
+      window.addEventListener("resize", check);
+      return () => window.removeEventListener("resize", check);
     }
   }, []);
 

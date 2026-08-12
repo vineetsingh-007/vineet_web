@@ -374,7 +374,7 @@ export function AerisAiVisual({ isHovered }: VisualProps) {
   const currentPoint = path[step];
 
   return (
-    <div className="relative w-full h-[220px] bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
+    <div className="relative w-full min-h-[220px] h-auto bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
       {/* HUD Header */}
       <div className="flex items-center justify-between border-b border-white/5 pb-1.5 text-[10px] text-foreground/80">
         <div className="flex items-center gap-1.5">
@@ -568,7 +568,7 @@ export function SignVerseVisual({ isHovered }: VisualProps) {
   const { wrist, fingers } = getHandLandmarks(current.handState);
 
   return (
-    <div className="relative w-full h-[220px] bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
+    <div className="relative w-full min-h-[220px] h-auto bg-black/40 rounded-xl border border-white/5 overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-muted-foreground leading-relaxed">
       {/* HUD Header */}
       <div className="flex items-center justify-between border-b border-white/5 pb-1.5 text-[10px] text-foreground/80">
         <div className="flex items-center gap-1.5">

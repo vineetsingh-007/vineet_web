@@ -78,12 +78,12 @@ export function Nav() {
   };
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 pt-4">
+    <header className="fixed top-0 inset-x-0 z-50 pt-3 sm:pt-4 px-2 sm:px-0">
       <div className="mx-auto w-[min(1180px,94vw)] flex flex-col gap-2">
         {/* Main Navbar */}
-        <div className={`w-full flex items-center gap-3 rounded-full px-4 py-2.5 transition-all ${scrolled || isOpen ? "glass-strong shadow-[0_10px_40px_-20px_rgba(0,0,0,0.6)]" : "glass"}`}>
+        <div className={`w-full flex items-center justify-between gap-3 rounded-full px-4 py-2.5 transition-all ${scrolled || isOpen ? "glass-strong shadow-[0_10px_40px_-20px_rgba(0,0,0,0.6)]" : "glass"}`}>
           <Magnetic range={40} strength={0.25}>
-            <a href="#hero" onClick={() => setIsOpen(false)} className="flex items-center gap-2.5">
+            <a href="#hero" onClick={() => setIsOpen(false)} className="flex items-center gap-2.5 min-h-[40px]">
               <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent text-[11px] font-bold text-primary-foreground">
                 VS
               </span>
@@ -97,7 +97,7 @@ export function Nav() {
               <a
                 key={s.id}
                 href={`#${s.id}`}
-                className={`relative px-3 py-1.5 transition-colors duration-200 ${active === s.id ? "text-cyan font-medium" : "text-muted-foreground hover:text-foreground"}`}
+                className={`relative px-3 py-2 transition-colors duration-200 ${active === s.id ? "text-cyan font-medium" : "text-muted-foreground hover:text-foreground"}`}
               >
                 {active === s.id && (
                   <motion.span
@@ -126,10 +126,11 @@ export function Nav() {
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-full border border-border md:hidden text-foreground hover:bg-white/5 transition-colors focus:outline-none"
+              className="p-2.5 rounded-full border border-border md:hidden text-foreground hover:bg-white/5 transition-colors focus:outline-none min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Toggle Menu"
+              aria-expanded={isOpen}
             >
-              {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
@@ -142,7 +143,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.98 }}
               transition={{ duration: 0.2 }}
-              className="md:hidden w-full glass-strong rounded-2xl p-4 flex flex-col gap-1.5 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.8)] border border-border/80"
+              className="md:hidden w-full glass-strong rounded-2xl p-4 flex flex-col gap-1.5 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.8)] border border-border/80 z-50"
             >
               {NAV_LINKS.map((s) => (
                 <a
@@ -152,7 +153,7 @@ export function Nav() {
                     e.preventDefault();
                     handleLinkClick(s.id);
                   }}
-                  className={`w-full px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center justify-between ${
+                  className={`w-full px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center justify-between min-h-[44px] ${
                     active === s.id
                       ? "bg-cyan/10 text-cyan border border-cyan/20"
                       : "text-muted-foreground hover:text-foreground hover:bg-white/[0.02] border border-transparent"
@@ -169,7 +170,7 @@ export function Nav() {
                     e.preventDefault();
                     handleLinkClick("contact");
                   }}
-                  className="w-full text-center inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary text-primary-foreground py-3 text-sm font-medium hover:opacity-90 transition-opacity"
+                  className="w-full text-center inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary text-primary-foreground py-3.5 text-sm font-medium hover:opacity-90 transition-opacity min-h-[44px]"
                 >
                   Get in touch <ArrowRight className="h-3.5 w-3.5" />
                 </a>
@@ -249,8 +250,8 @@ export function Hero() {
     <section id="hero" className="relative min-h-[100svh] flex items-center overflow-hidden pt-32 pb-20">
       {/* subtle background */}
       <motion.div style={{ y: bgY }} className="absolute inset-0 -z-10 grid-bg opacity-60 pointer-events-none" />
-      <motion.div style={{ y: bgY2 }} className="absolute -top-40 left-1/2 -translate-x-1/2 -z-10 h-[520px] w-[1100px] rounded-full bg-[radial-gradient(closest-side,rgba(80,160,230,0.18),transparent_70%)] blur-2xl animate-hud-pulse pointer-events-none" />
-      <motion.div style={{ y: bgY }} className="absolute bottom-0 right-0 -z-10 h-[400px] w-[700px] rounded-full bg-[radial-gradient(closest-side,rgba(160,120,255,0.12),transparent_70%)] blur-2xl pointer-events-none" />
+      <motion.div style={{ y: bgY2 }} className="absolute -top-40 left-1/2 -translate-x-1/2 -z-10 h-[520px] w-[1100px] max-w-[90vw] rounded-full bg-[radial-gradient(closest-side,rgba(80,160,230,0.18),transparent_70%)] blur-2xl animate-hud-pulse pointer-events-none" />
+      <motion.div style={{ y: bgY }} className="absolute bottom-0 right-0 -z-10 h-[400px] w-[700px] max-w-[80vw] rounded-full bg-[radial-gradient(closest-side,rgba(160,120,255,0.12),transparent_70%)] blur-2xl pointer-events-none" />
 
       <motion.div
         variants={containerVariants}

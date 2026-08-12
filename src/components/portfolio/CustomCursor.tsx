@@ -5,14 +5,20 @@ export function CustomCursor() {
   const ring = useRef<HTMLDivElement>(null);
   const [hoverState, setHoverState] = useState<"default" | "interactive" | "card">("default");
   const [isVisible, setIsVisible] = useState(false);
-  const [isCoarse, setIsCoarse] = useState(false);
+  const [isCoarse, setIsCoarse] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+  });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(pointer: coarse)").matches) {
-      setIsCoarse(true);
-      return;
-    }
+    const checkCoarse = () => {
+      const coarse = window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+      setIsCoarse(coarse);
+      return coarse;
+    };
+
+    if (checkCoarse()) return;
 
     let mx = window.innerWidth / 2;
     let my = window.innerHeight / 2;
@@ -23,7 +29,7 @@ export function CustomCursor() {
     const onMove = (e: MouseEvent) => {
       mx = e.clientX;
       my = e.clientY;
-      if (!isVisible) setIsVisible(true);
+      setIsVisible(true);
     };
 
     const tick = () => {
@@ -65,24 +71,27 @@ export function CustomCursor() {
       setIsVisible(true);
     };
 
+    const onResize = () => {
+      checkCoarse();
+    };
+
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseover", onOver);
+    window.addEventListener("resize", onResize);
     document.addEventListener("mouseleave", onMouseLeave);
     document.addEventListener("mouseenter", onMouseEnter);
 
     raf = requestAnimationFrame(tick);
 
-    // Initial check if cursor is inside page
-    setIsVisible(true);
-
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseover", onOver);
+      window.removeEventListener("resize", onResize);
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseenter", onMouseEnter);
     };
-  }, [isVisible]);
+  }, []);
 
   const getRingStyle = () => {
     const baseStyle = {
