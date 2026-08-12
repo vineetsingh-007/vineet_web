@@ -296,28 +296,22 @@ export function Hero() {
               variants={containerVariants}
               className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold leading-[1.05] sm:leading-[1.02] tracking-tight text-gradient flex flex-wrap relative z-20"
             >
-              {["Building", "thoughtful", "software", "with"].map((word, idx) => (
+              {["Turning", "ideas", "into"].map((word, idx) => (
                 <span key={idx} className="mr-[0.22em] inline-block whitespace-nowrap py-1">
                   <motion.span variants={titleWordVariants} className="inline-block">{word}</motion.span>
                 </span>
               ))}
               <span className="mr-[0.22em] inline-block text-cyan whitespace-nowrap py-1">
-                <motion.span variants={titleWordVariants} className="inline-block">AI,</motion.span>
+                <motion.span variants={titleWordVariants} className="inline-block">scalable</motion.span>
               </span>
-              <span className="mr-[0.22em] inline-block text-cyan whitespace-nowrap py-1">
-                <motion.span variants={titleWordVariants} className="inline-block">cloud</motion.span>
-              </span>
-              {["and"].map((word, idx) => (
-                <span key={idx} className="mr-[0.22em] inline-block whitespace-nowrap py-1">
-                  <motion.span variants={titleWordVariants} className="inline-block">{word}</motion.span>
-                </span>
-              ))}
               <span className="mr-[0.22em] inline-block text-violet whitespace-nowrap py-1">
                 <motion.span variants={titleWordVariants} className="inline-block">full-stack</motion.span>
               </span>
-              <span className="mr-[0.22em] inline-block whitespace-nowrap py-1">
-                <motion.span variants={titleWordVariants} className="inline-block">craft.</motion.span>
-              </span>
+              {["applications."].map((word, idx) => (
+                <span key={idx} className="mr-[0.22em] inline-block whitespace-nowrap py-1">
+                  <motion.span variants={titleWordVariants} className="inline-block">{word}</motion.span>
+                </span>
+              ))}
             </motion.h1>
           </div>
 
@@ -381,7 +375,7 @@ export function Hero() {
             <HolographicProfile />
             <div className="mt-5 grid grid-cols-3 gap-2 text-center">
               {[
-                { k: "CGPA", v: "8.88" },
+                { k: "CGPA", v: "8.93" },
                 { k: "Projects", v: "8+" },
                 { k: "Certs", v: "10+" },
               ].map((s) => (
@@ -401,7 +395,7 @@ export function Hero() {
 /* ----------------------------- HIGHLIGHTS ----------------------------- */
 
 const HIGHLIGHTS = [
-  { icon: GraduationCap, label: "CGPA", value: "8.88", note: "MIT ADT University" },
+  { icon: GraduationCap, label: "CGPA", value: "8.93", note: "MIT ADT University" },
   { icon: BriefcaseBusiness, label: "Internship", value: "Prodigy Infotech", note: "Software Development" },
   { icon: FlaskConical, label: "Research", value: "ICCET 2024", note: "Published Paper" },
   { icon: Award, label: "Certifications", value: "10+", note: "NPTEL · Coursera · Cisco" },
@@ -447,7 +441,7 @@ export function Highlights() {
                   <div className="group/highlight">
                     <Icon className="h-5 w-5 text-cyan transition-transform duration-300 group-hover/highlight:scale-110" />
                     <div className="mt-4 font-display text-xl font-semibold tracking-tight">
-                      {h.value === "8.88" ? <Counter to={8.88} /> : h.value === "8+" ? <><Counter to={8} />+</> : h.value === "7+" ? <><Counter to={7} />+</> : h.value}
+                      {h.value === "8.93" ? <Counter to={8.93} /> : h.value === "8+" ? <><Counter to={8} />+</> : h.value === "7+" ? <><Counter to={7} />+</> : h.value}
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">{h.label}</div>
                     <div className="mt-3 text-[11px] text-muted-foreground/70 leading-snug">{h.note}</div>
